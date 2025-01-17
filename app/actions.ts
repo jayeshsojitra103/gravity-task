@@ -17,7 +17,7 @@ export async function getPokemonTypes(): Promise<PokemonType[]> {
 
 export async function getAllPokemon(): Promise<Pokemon[]> {
 
-    const response = await fetch(`${url}/pokemon?limit=100`)
+    const response = await fetch(`${url}/pokemon?limit=50`)
     const data = await response.json()
 
     const pokemonDetails = await Promise.all(
