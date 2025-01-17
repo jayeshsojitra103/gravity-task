@@ -4,11 +4,17 @@ import { getPokemonByName } from "@/app/actions";
 import Image from "next/image";
 import { Abilities, Stats, Types } from "@/types/pokemon";
 import { Metadata } from "next";
+import { PokemonTypeColors } from "@/constant/constant";
 
+interface Params extends Promise<{ name: string }> {
+  name: string;
+}
+
+// Generate metadata for the page
 export async function generateMetadata({
   params,
 }: {
-  params: Params;
+  params: Promise<Params>;
 }): Promise<Metadata> {
   try {
     const resolvedParams = await params;
@@ -28,16 +34,16 @@ export async function generateMetadata({
   }
 }
 
-interface Params {
-  name: string;
-}
-
-export default async function PokemonPage({ params }: { params: Params }) {
+export default async function PokemonPage({
+  params,
+}: {
+  params: Promise<Params>;
+}) {
   let pokemon;
 
   try {
     const resolvedParams = await params;
-    pokemon = await getPokemonByName((resolvedParams as Params).name);
+    pokemon = await getPokemonByName(resolvedParams.name);
   } catch (error) {
     console.log(error);
     notFound();
@@ -48,10 +54,7 @@ export default async function PokemonPage({ params }: { params: Params }) {
       {/* Breadcrumb Navigation */}
       <div className="mb-10">
         <Breadcrumb
-          items={[
-            { label: "Home", href: "/" },
-            { label: pokemon.name, href: `/pokemon/${pokemon.name}` },
-          ]}
+          items={[{ label: pokemon.name, href: `/pokemon/${pokemon.name}` }]}
         />
       </div>
 
@@ -82,15 +85,10 @@ export default async function PokemonPage({ params }: { params: Params }) {
               {pokemon.types.map((type: Types) => (
                 <span
                   key={type.type.name}
-                  className={`inline-block rounded-full px-4 py-2 text-sm font-medium text-white capitalize ${
-                    type.type.name === "fire"
-                      ? "bg-red-600"
-                      : type.type.name === "water"
-                      ? "bg-blue-600"
-                      : type.type.name === "grass"
-                      ? "bg-green-600"
-                      : "bg-gray-600"
-                  }`}
+                  className="inline-block rounded-full px-4 py-2 text-sm font-medium text-white capitalize"
+                  style={{
+                    backgroundColor: PokemonTypeColors[type.type.name],
+                  }}
                 >
                   {type.type.name}
                 </span>
@@ -124,18 +122,18 @@ export default async function PokemonPage({ params }: { params: Params }) {
               <div className="flex justify-between">
                 <dt className="text-gray-600">Height</dt>
                 <dd className="font-medium text-gray-800">
-                  {pokemon.height / 10}m
+                  {pokemon.height / 10} m
                 </dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-gray-600">Weight</dt>
                 <dd className="font-medium text-gray-800">
-                  {pokemon.weight / 10}kg
+                  {pokemon.weight / 10} kg
                 </dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-gray-600">Abilities</dt>
-                <dd className="font-medium text-gray-800 capitalize">
+                <dd className="font-medium text-gray-800">
                   {pokemon.abilities
                     .map((ability: Abilities) => ability.ability.name)
                     .join(", ")}

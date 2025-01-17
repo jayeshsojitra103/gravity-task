@@ -20,7 +20,7 @@ export function SearchForm({
   onTypeChange,
 }: SearchFormProps) {
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between gap-6 w-full bg-gray-100 p-6 rounded-lg shadow-md border border-gray-200">
+    <div className="flex flex-col md:flex-row items-center justify-between gap-6 w-full bg-gray-100 p-6 rounded-lg shadow-sm border border-gray-200">
       {/* Search Input */}
       <div className="w-full max-w-md">
         <label
